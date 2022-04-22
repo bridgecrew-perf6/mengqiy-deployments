@@ -1,0 +1,29 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: backend
+  annotations:
+    config.kubernetes.io/local-config: "true"
+upstream:
+  type: git
+  git:
+    repo: https://github.com/mengqiy/mengqiy-blueprints.git
+    directory: basens
+    ref: v0
+upstreamLock:
+  type: git
+  git:
+    repo: https://github.com/mengqiy/mengqiy-blueprints.git
+    directory: basens
+    ref: v0
+    commit: 3b27507c3bbd6f25812c688ba9b3c7343148c3e6
+info: {}
+pipeline:
+  mutators:
+  - image: gcr.io/kpt-fn/set-namespace:v0.3.4
+    configPath: package-context.yaml
+  - image: gcr.io/kpt-fn/apply-replacements:v0.1.0
+    configPath: apply-replacements.yaml
+  validators:
+  - image: gcr.io/kpt-fn/kubeval:v0.2.0
+  - image: gcr.io/kpt-fn/gatekeeper:v0.2.1
